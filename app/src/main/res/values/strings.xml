@@ -6,4 +6,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="NavigationHome">Home</string>
+    <string name="NavigationUnlocked">Unlocked</string>
+    <string name="NavigationLocked">Locked</string>
+    <string name="home_fragment_locked">Locked</string>
+    <string name="home_fragment_unlocked">Unlocked</string>
+    <string name="home_fragment_title">Welcome!</string>
+    <string name="home_fragment_instructions">Lock the applications you choose to, and then activate the lock by pressing the lock image above!</string>
 </resources>

@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/fragments_home"
+        android:icon="@drawable/icon_home"
+        android:title="@string/NavigationHome"
+        app:cnb_iconColor="@color/black"/>
+    <item
+        android:id="@+id/fragments_unlocked"
+        android:icon="@drawable/icon_unlocked"
+        android:title="@string/NavigationUnlocked"
+        app:cnb_iconColor="@color/black"/>
+    <item
+        android:id="@+id/fragments_locked"
+        android:icon="@drawable/icon_locked"
+        android:title="@string/NavigationLocked"
+        app:cnb_iconColor="@color/black" />
+</menu>
