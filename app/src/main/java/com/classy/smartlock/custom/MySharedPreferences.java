@@ -1,4 +1,4 @@
-package com.classy.smartlock;
+package com.classy.smartlock.custom;
 
 import android.content.SharedPreferences;
 import android.content.Context;

@@ -13,15 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.classy.smartlock.MainActivity;
-import com.classy.smartlock.MySharedPreferences;
+import com.classy.smartlock.custom.MySharedPreferences;
 import com.classy.smartlock.R;
 
 import net.colindodd.toggleimagebutton.ToggleImageButton;
 
 public class HomeFragment extends Fragment {
 
-    //TODO: text switches from on to off, dialogue when its the first use
+    //TODO: dialogue when its the first use
 
     //Callback
     OnSwitchFragmentListener callback;
@@ -29,6 +28,7 @@ public class HomeFragment extends Fragment {
     private ToggleImageButton home_BTN_activate;
     private TextView home_TXT_state;
     private TextView home_TXT_instructions;
+    private TextView home_TXT_help;
 
     private boolean lock_status;
 
@@ -53,9 +53,13 @@ public class HomeFragment extends Fragment {
         if (lock_status) {
             home_BTN_activate.setChecked(true);
             home_TXT_state.setText(R.string.home_fragment_locked);
+            home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
+            home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
         } else {
             home_BTN_activate.setChecked(false);
             home_TXT_state.setText(R.string.home_fragment_unlocked);
+            home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
+            home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
         }
     }
 
@@ -74,9 +78,11 @@ public class HomeFragment extends Fragment {
             if (lock_status) {
                 home_TXT_state.setText(R.string.home_fragment_locked);
                 home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
+                home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
             } else {
                 home_TXT_state.setText(R.string.home_fragment_unlocked);
                 home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
+                home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
             }
             Log.d("AAAT", "New Status Value: " + lock_status);
             MySharedPreferences.getInstance().putBoolean("lock_status", lock_status);
@@ -87,6 +93,7 @@ public class HomeFragment extends Fragment {
         home_BTN_activate = view.findViewById(R.id.home_BTN_activate);
         home_TXT_state = view.findViewById(R.id.home_TXT_state);
         home_TXT_instructions = view.findViewById(R.id.home_TXT_instructions);
+        home_TXT_help = view.findViewById(R.id.home_TXT_help);
     }
 
     public void setOnSwitchFragmentListener(HomeFragment.OnSwitchFragmentListener callback) {

@@ -1,4 +1,4 @@
-package com.classy.smartlock;
+package com.classy.smartlock.services;
 
 import android.app.Service;
 import android.content.Intent;

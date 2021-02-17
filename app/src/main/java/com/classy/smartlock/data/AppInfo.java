@@ -1,8 +1,10 @@
-package com.classy.smartlock;
+package com.classy.smartlock.data;
 
 import android.graphics.drawable.Drawable;
 
-public class AppInfo {
+import java.io.Serializable;
+
+public class AppInfo implements Serializable {
 
     private String appname = "";
     private String pname = "";

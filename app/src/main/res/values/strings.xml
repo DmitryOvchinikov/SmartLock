@@ -13,4 +13,7 @@
     <string name="home_fragment_unlocked">Unlocked</string>
     <string name="home_fragment_title">Welcome!</string>
     <string name="home_fragment_instructions">Lock the applications you choose to, and then activate the lock by pressing the lock image above!</string>
+    <string name="home_fragment_help">After you activate the lock for the first time, you will be asked to choose either a password or an email which will be used to unlock it.</string>
+    <string name="unlocked_fragment_title">Unlocked Apps</string>
+    <string name="locked_fragment_title">Locked Apps</string>
 </resources>

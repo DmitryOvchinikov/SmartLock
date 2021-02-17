@@ -1,6 +1,8 @@
-package com.classy.smartlock;
+package com.classy.smartlock.custom;
 
 import android.app.Application;
+
+import com.classy.smartlock.custom.MySharedPreferences;
 
 public class MyApplication extends Application {
 
