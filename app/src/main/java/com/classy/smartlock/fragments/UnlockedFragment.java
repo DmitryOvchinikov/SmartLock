@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.classy.smartlock.R;
 import com.classy.smartlock.activities.MainActivity;
 import com.classy.smartlock.adapters.ApplicationsAdapter;
+import com.classy.smartlock.custom.MySharedPreferences;
 
 public class UnlockedFragment extends Fragment {
 
@@ -34,10 +35,7 @@ public class UnlockedFragment extends Fragment {
 
         findViews(view);
         initList();
-        if (unlocked_LST_list.getAdapter().getItemCount() == 0) {
-            unlocked_LST_list.setVisibility(View.INVISIBLE);
-        }
-        initList();
+
     }
 
 
@@ -45,13 +43,12 @@ public class UnlockedFragment extends Fragment {
         Log.d("AAAT", "initInstalledList");
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         unlocked_LST_list.setLayoutManager(layoutManager);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        unlocked_adapter = new ApplicationsAdapter( mainActivity.getInstalledApps(), 1);
+        unlocked_adapter = new ApplicationsAdapter((MySharedPreferences.getInstance().getAppInfoArrayList("unlocked_apps", null)), 1);
         unlocked_LST_list.setAdapter(unlocked_adapter);
         unlocked_adapter.notifyDataSetChanged();
     }
 
-    private void findViews (View view){
+    private void findViews (View view) {
             unlocked_LST_list = view.findViewById(R.id.unlocked_LST_list);
         }
     }

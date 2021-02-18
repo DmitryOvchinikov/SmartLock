@@ -3,24 +3,14 @@ package com.classy.smartlock.activities;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActivityManager;
-import android.app.AppOpsManager;
-import android.app.usage.UsageEvents;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.classy.smartlock.R;
@@ -34,25 +24,21 @@ import com.classy.smartlock.services.RunningAppsService;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-//TODO: UnlockedFragment: recyclerview list of all the unlocked applications on the device ------ Maybe hold the list of all the applications in main and send it to lock / unlock via callbacks.
-//TODO: LockedFragment: recyclerview list of all the locked applications on the device.
-//TODO: Locked + Unlocked fragments: the option to lock/unlock an application.
 //TODO: Implement the password / email verification (the lock-unlock mechanism).
-//TODO: Loading page?
+//TODO: send data to the service (locked apps, lock status)
 
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnSwitchFragmentListener {
-
-    private RecyclerView main_LST_list;
 
     //NAVIGATION
     private ChipNavigationBar main_BAR_fragments;
 
     //DATA
     private ArrayList<AppInfo> installedApps;
+    private ArrayList<AppInfo> unlockedApps;
+    private ArrayList<AppInfo> lockedApps;
     private ApplicationsAdapter applicationsAdapter;
     private boolean lock_status;
 
@@ -63,12 +49,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
         setContentView(R.layout.activity_main);
 
         findViews();
+        installedApps = getApps(false);
         getSPInfo();
         //initInstalledList();
-        installedApps = getInstalledApps(false);
         initBottomBar();
-        //openUsageDialog();
-        List<UsageEvents.Event> appActivity;
+
         Intent service_intent = new Intent(this, RunningAppsService.class);
         //service_intent.putExtra("locked", )
         startForegroundService(service_intent);
@@ -76,10 +61,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
 
     private void getSPInfo() {
         lock_status = MySharedPreferences.getInstance().getBoolean("lock_status", true);
-        Log.d("AAAT", "Initial grab from SP: " + lock_status);
+        if (MySharedPreferences.getInstance().getAppInfoArrayList("locked_apps", null) == null) {
+            Log.d("AAAT", "Putting installedapps in the SP!");
+            MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", installedApps);
+        }
     }
 
-    private ArrayList<AppInfo> getInstalledApps(boolean getSysPackages) {
+    private ArrayList<AppInfo> getApps(boolean getSysPackages) {
         int flags = PackageManager.GET_META_DATA | PackageManager.GET_SHARED_LIBRARY_FILES;
         Log.d("AAAT", "getInstalledApps");
         ArrayList<AppInfo> res = new ArrayList<>();
@@ -97,12 +85,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
             newInfo.setPname(p.packageName);
             newInfo.setVersionName(p.versionName);
             newInfo.setVersionCode(p.versionCode);
-            newInfo.setIcon(p.applicationInfo.loadIcon(this.getPackageManager()));
             res.add(newInfo);
         }
         return res;
     }
 
+    // Checking if the application is a system app
     private boolean isSystemPackage(PackageInfo packageInfo) {
         return ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     }
@@ -129,10 +117,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
 
     private void openUsageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Usage Access Needed :(")
-                .setMessage("You need to give usage access to this app to see usage data of your apps. " +
-                        "Click \"Go To Settings\" and then give the access :)")
-                .setPositiveButton("Go To Settings", new DialogInterface.OnClickListener() {
+        builder.setTitle("Usage Access Required!")
+                .setMessage("This application requires Usage Access to properly function, please click \"Settings\" and turn the access on.")
+                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent usageAccessIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
@@ -152,10 +139,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
 
     public boolean getLockStatus() {
         return lock_status;
-    }
-
-    public ArrayList<AppInfo> getInstalledApps() {
-        return installedApps;
     }
 
     private void findViews() {

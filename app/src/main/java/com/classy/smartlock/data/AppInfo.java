@@ -10,7 +10,16 @@ public class AppInfo implements Serializable {
     private String pname = "";
     private String versionName = "";
     private int versionCode = 0;
-    private Drawable icon;
+
+    public AppInfo() {
+    }
+
+    public AppInfo(String appname, String pname, String versionName, int versionCode) {
+        this.appname = appname;
+        this.pname = pname;
+        this.versionName = versionName;
+        this.versionCode = versionCode;
+    }
 
     public String getAppname() {
         return appname;
@@ -42,13 +51,5 @@ public class AppInfo implements Serializable {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
-    }
-
-    public Drawable getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
     }
 }
