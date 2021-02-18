@@ -1,5 +1,6 @@
 package com.classy.smartlock.fragments;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,9 @@ import com.classy.smartlock.custom.MySharedPreferences;
 import com.classy.smartlock.R;
 
 import net.colindodd.toggleimagebutton.ToggleImageButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -44,6 +48,9 @@ public class HomeFragment extends Fragment {
         findViews(view);
         setLock();
         home_BTN_activate.setOnClickListener(onClickListener);
+        UsageEvents.Event currentEvent;
+        List<UsageEvents.Event> allEvents = new ArrayList<>();
+
     }
 
     private void setLock() {
