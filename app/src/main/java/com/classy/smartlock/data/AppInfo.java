@@ -1,10 +1,8 @@
 package com.classy.smartlock.data;
 
-import android.graphics.drawable.Drawable;
-
 import java.io.Serializable;
 
-public class AppInfo implements Serializable {
+public class AppInfo implements Serializable, Comparable<AppInfo> {
 
     private String appname = "";
     private String pname = "";
@@ -51,5 +49,11 @@ public class AppInfo implements Serializable {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
+    }
+
+    // Compare by package names
+    @Override
+    public int compareTo(AppInfo appInfo) {
+        return pname.compareTo(appInfo.getPname());
     }
 }

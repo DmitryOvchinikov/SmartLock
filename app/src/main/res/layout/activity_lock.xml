@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/lock_TXT_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/lock_title"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        />
+
+    <View
+        android:id="@+id/lock_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        android:layout_below="@id/lock_TXT_title"/>
+
+
+    <TextView
+        android:id="@+id/lock_TXT_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/lock_text"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="180dp"
+        android:layout_below="@id/lock_TXT_title"
+        />
+
+    <EditText
+        android:id="@+id/lock_EDT_password"
+        android:textSize="26sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/lock_input_pass"
+        android:layout_centerHorizontal="true"
+        android:inputType="textPassword"
+        android:textStyle="italic"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/rectangle_drawable_green"
+        android:autofillHints=""
+        android:layout_below="@id/lock_TXT_text"
+        />
+
+    <Button
+        android:id="@+id/lock_BTN_enter"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/lock_EDT_password"
+        android:layout_centerHorizontal="true"
+        android:text="@string/lock_enter"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rectangle_drawable_red"
+
+        />
+    <Button
+        android:id="@+id/lock_BTN_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/lock_exit"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rectangle_drawable_red"
+        />
+
+</RelativeLayout>

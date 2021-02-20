@@ -13,7 +13,16 @@
     <string name="home_fragment_unlocked">Unlocked</string>
     <string name="home_fragment_title">Welcome!</string>
     <string name="home_fragment_instructions">Lock the applications you choose to, and then activate the lock by pressing the lock image above!</string>
-    <string name="home_fragment_help">After you activate the lock for the first time, you will be asked to choose either a password or an email which will be used to unlock it.</string>
+    <string name="home_fragment_help">You may close the application afterwards, and only re-enter it in case you need to manually lock / unlock more applications.</string>
     <string name="unlocked_fragment_title">Unlocked Apps</string>
     <string name="locked_fragment_title">Locked Apps</string>
+    <string name="lock_title">This application is locked!</string>
+    <string name="lock_input_pass">Input the password</string>
+    <string name="lock_enter">ENTER</string>
+    <string name="lock_exit">EXIT</string>
+    <string name="password_text">Please input your password:</string>
+    <string name="password_pass">Your password</string>
+    <string name="email_hint">Your Email</string>
+    <string name="email_text">Please input your email address:</string>
+    <string name="lock_text">Please input your password to unlock the application.</string>
 </resources>

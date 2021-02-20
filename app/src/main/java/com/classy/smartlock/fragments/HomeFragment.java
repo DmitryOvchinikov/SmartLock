@@ -2,15 +2,20 @@ package com.classy.smartlock.fragments;
 
 import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -25,9 +30,6 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     //TODO: dialogue when its the first use
-
-    //Callback
-    OnSwitchFragmentListener callback;
 
     private ToggleImageButton home_BTN_activate;
     private TextView home_TXT_state;
@@ -72,8 +74,6 @@ public class HomeFragment extends Fragment {
 
     private void getStatus() {
         Log.d("AAAT", "getStatus");
-        //MainActivity mainActivity = (MainActivity) getActivity();
-        //lock_status = mainActivity.getLockStatus();
         lock_status = MySharedPreferences.getInstance().getBoolean("lock_status", false);
     }
 
@@ -81,44 +81,71 @@ public class HomeFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d("AAAT", "onClick");
-            lock_status = !lock_status;
-            if (lock_status) {
-                home_TXT_state.setText(R.string.home_fragment_locked);
-                home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
-                home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
+            if (MySharedPreferences.getInstance().getString("email", null) == null && MySharedPreferences.getInstance().getString("password", null) == null) {
+                home_BTN_activate.setChecked(false);
+                createPassword();
             } else {
-                home_TXT_state.setText(R.string.home_fragment_unlocked);
-                home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
-                home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
+                lock_status = !lock_status;
+                if (lock_status) {
+                    home_TXT_state.setText(R.string.home_fragment_locked);
+                    home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
+                    home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_red));
+                } else {
+                    home_TXT_state.setText(R.string.home_fragment_unlocked);
+                    home_TXT_instructions.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
+                    home_TXT_help.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.rectangle_drawable_green));
+                }
+                Log.d("AAAT", "New Status Value: " + lock_status);
+                MySharedPreferences.getInstance().putBoolean("lock_status", lock_status);
             }
-            Log.d("AAAT", "New Status Value: " + lock_status);
-            MySharedPreferences.getInstance().putBoolean("lock_status", lock_status);
         }
     };
+
+    private void createPassword() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle("Choose")
+                .setMessage("You have to choose a password to lock the applications.")
+                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder password_builder = new AlertDialog.Builder(getContext());
+                        LayoutInflater li = LayoutInflater.from(getContext());
+                        View password_dialog_view = li.inflate(R.layout.password_dialog, null);
+
+                        password_builder.setView(password_dialog_view);
+                        EditText userInput = password_dialog_view.findViewById(R.id.password_dialog_edit);
+
+                        password_builder.setCancelable(false)
+                                .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MySharedPreferences.getInstance().putString("password", userInput.getText().toString());
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        password_builder.create().show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false);
+        builder.show();
+    }
 
     private void findViews(View view) {
         home_BTN_activate = view.findViewById(R.id.home_BTN_activate);
         home_TXT_state = view.findViewById(R.id.home_TXT_state);
         home_TXT_instructions = view.findViewById(R.id.home_TXT_instructions);
         home_TXT_help = view.findViewById(R.id.home_TXT_help);
-    }
-
-    public void setOnSwitchFragmentListener(HomeFragment.OnSwitchFragmentListener callback) {
-        this.callback = callback;
-        Log.d("AAAT", "CALLBACK IN HOME:  " + callback);
-    }
-
-    public interface OnSwitchFragmentListener {
-        public void onHomeFragmentSwitch(boolean status);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            callback = (OnSwitchFragmentListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement OnSwitchFragmentListener");
-        }
     }
 }

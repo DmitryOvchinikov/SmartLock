@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.AppOpsManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -26,11 +27,10 @@ import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Implement the password / email verification (the lock-unlock mechanism).
-//TODO: send data to the service (locked apps, lock status)
+//TODO: stop moving locked/unlocked apps from the list while the app is locked
 
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnSwitchFragmentListener {
+public class MainActivity extends AppCompatActivity {
 
     //NAVIGATION
     private ChipNavigationBar main_BAR_fragments;
@@ -51,11 +51,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
         findViews();
         installedApps = getApps(false);
         getSPInfo();
-        //initInstalledList();
+        if (!checkUsagePermission()) {
+            askUsagePermission();
+        }
         initBottomBar();
 
-        Intent service_intent = new Intent(this, RunningAppsService.class);
-        //service_intent.putExtra("locked", )
+        Intent service_intent = new Intent(this, com.classy.smartlock.services.RunningAppsService.class);
         startForegroundService(service_intent);
     }
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
 
     private ArrayList<AppInfo> getApps(boolean getSysPackages) {
         int flags = PackageManager.GET_META_DATA | PackageManager.GET_SHARED_LIBRARY_FILES;
-        Log.d("AAAT", "getInstalledApps");
+        Log.d("AAAT", "getApps");
         ArrayList<AppInfo> res = new ArrayList<>();
         List<PackageInfo> packs = this.getPackageManager().getInstalledPackages(flags);
         for (int i = 0; i < packs.size(); i++) {
@@ -115,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
         }
     };
 
-    private void openUsageDialog() {
+    // Asking for the UsageAccess permission
+    private void askUsagePermission() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Usage Access Required!")
                 .setMessage("This application requires Usage Access to properly function, please click \"Settings\" and turn the access on.")
@@ -131,32 +133,30 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnSw
         builder.show();
     }
 
+    // Initializing the bottom fragment navigation bar
     private void initBottomBar() {
         main_BAR_fragments.setItemSelected(R.id.fragments_home, true);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragments, new HomeFragment()).commit();
         main_BAR_fragments.setOnItemSelectedListener(fragmentSelectListener);
     }
 
-    public boolean getLockStatus() {
-        return lock_status;
-    }
-
     private void findViews() {
-        //main_LST_list = findViewById(R.id.main_LST_list);
         main_BAR_fragments = findViewById(R.id.main_BAR_fragments);
     }
 
-    // Saving the state of the lock on application pause.
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //MySharedPreferences.getInstance().putBoolean("lock_status", lock_status);
-    }
-
-    @Override
-    public void onHomeFragmentSwitch(boolean status) {
-        lock_status = status;
-        Log.d("AAAT", "CALLBACK IN MAIN: lock_status: " + lock_status + " status: " + status);
-        MySharedPreferences.getInstance().putBoolean("lock_status", lock_status);
+    // Checking if the application has the Usage permission enabled
+    private boolean checkUsagePermission() {
+        try {
+            PackageManager packageManager = this.getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.getPackageName(), 0);
+            AppOpsManager appOpsManager = (AppOpsManager)this.getSystemService(APP_OPS_SERVICE);
+            int mode = -1;
+            if (appOpsManager != null) {
+                mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName);
+            }
+            return mode==AppOpsManager.MODE_ALLOWED;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }
