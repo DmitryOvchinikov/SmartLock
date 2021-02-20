@@ -18,7 +18,6 @@ import com.classy.smartlock.data.AppInfo;
 
 import java.util.ArrayList;
 
-//TODO: Return the new unlocked app into the unlocked apps
 
 public class LockActivity extends AppCompatActivity {
 

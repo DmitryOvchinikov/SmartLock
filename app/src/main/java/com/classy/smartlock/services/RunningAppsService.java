@@ -8,7 +8,6 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;

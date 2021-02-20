@@ -1,9 +1,7 @@
 package com.classy.smartlock.adapters;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.classy.smartlock.R;
-import com.classy.smartlock.activities.MainActivity;
 import com.classy.smartlock.custom.MySharedPreferences;
 import com.classy.smartlock.data.AppInfo;
 
@@ -61,38 +58,42 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
         holder.row_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
-                builder.setTitle("Locking/Unlocking " + holder.row_TXT_appName.getText())
-                        .setMessage("Are you sure?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialoginterface, int i) {
-                                if (fragment_num == 0) {
-                                    ArrayList<AppInfo> unlocked_apps = MySharedPreferences.getInstance().getAppInfoArrayList("unlocked_apps", null);
-                                    if (!unlocked_apps.contains(appInfoArrayList.get(position))) {
-                                        unlocked_apps.add(appInfoArrayList.get(position));
+                if (MySharedPreferences.getInstance().getBoolean("lock_status", false)) {
+                    //Cant lock/unlock if the application is locked.
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
+                    builder.setTitle("Locking/Unlocking " + holder.row_TXT_appName.getText())
+                            .setMessage("Are you sure?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialoginterface, int i) {
+                                    if (fragment_num == 0) {
+                                        ArrayList<AppInfo> unlocked_apps = MySharedPreferences.getInstance().getAppInfoArrayList("unlocked_apps", null);
+                                        if (!unlocked_apps.contains(appInfoArrayList.get(position))) {
+                                            unlocked_apps.add(appInfoArrayList.get(position));
+                                        }
+                                        MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", unlocked_apps);
+                                        appInfoArrayList.remove(position);
+                                        MySharedPreferences.getInstance().putAppInfoArrayList("locked_apps", appInfoArrayList);
+                                    } else {
+                                        ArrayList<AppInfo> locked_apps = MySharedPreferences.getInstance().getAppInfoArrayList("locked_apps", null);
+                                        if (locked_apps == null) {
+                                            locked_apps = new ArrayList<AppInfo>();
+                                        }
+                                        if (!locked_apps.contains(appInfoArrayList.get(position))) {
+                                            locked_apps.add(appInfoArrayList.get(position));
+                                        }
+                                        MySharedPreferences.getInstance().putAppInfoArrayList("locked_apps", locked_apps);
+                                        appInfoArrayList.remove(position);
+                                        MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", appInfoArrayList);
                                     }
-                                    MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", unlocked_apps);
-                                    appInfoArrayList.remove(position);
-                                    MySharedPreferences.getInstance().putAppInfoArrayList("locked_apps", appInfoArrayList);
-                                } else {
-                                    ArrayList<AppInfo> locked_apps = MySharedPreferences.getInstance().getAppInfoArrayList("locked_apps", null);
-                                    if(locked_apps == null ){
-                                        locked_apps = new ArrayList<AppInfo>();
-                                    }
-                                    if (!locked_apps.contains(appInfoArrayList.get(position))) {
-                                        locked_apps.add(appInfoArrayList.get(position));
-                                    }
-                                    MySharedPreferences.getInstance().putAppInfoArrayList("locked_apps", locked_apps);
-                                    appInfoArrayList.remove(position);
-                                    MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", appInfoArrayList);
+                                    ApplicationsAdapter.this.notifyDataSetChanged();
+                                    dialoginterface.dismiss();
                                 }
-                                ApplicationsAdapter.this.notifyDataSetChanged();
-                                dialoginterface.dismiss();
-                            }
                             })
-                        .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
-                        .setCancelable(true);
-                builder.show();
+                            .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                            .setCancelable(true);
+                    builder.show();
+                }
             }
         });
     }

@@ -37,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     //DATA
     private ArrayList<AppInfo> installedApps;
-    private ArrayList<AppInfo> unlockedApps;
-    private ArrayList<AppInfo> lockedApps;
-    private ApplicationsAdapter applicationsAdapter;
-    private boolean lock_status;
 
 
     @Override
@@ -61,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSPInfo() {
-        lock_status = MySharedPreferences.getInstance().getBoolean("lock_status", true);
         if (MySharedPreferences.getInstance().getAppInfoArrayList("locked_apps", null) == null) {
             Log.d("AAAT", "Putting installedapps in the SP!");
             MySharedPreferences.getInstance().putAppInfoArrayList("unlocked_apps", installedApps);

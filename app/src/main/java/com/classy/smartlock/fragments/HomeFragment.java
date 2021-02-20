@@ -1,11 +1,8 @@
 package com.classy.smartlock.fragments;
 
 import android.app.usage.UsageEvents;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,9 +47,6 @@ public class HomeFragment extends Fragment {
         findViews(view);
         setLock();
         home_BTN_activate.setOnClickListener(onClickListener);
-        UsageEvents.Event currentEvent;
-        List<UsageEvents.Event> allEvents = new ArrayList<>();
-
     }
 
     private void setLock() {

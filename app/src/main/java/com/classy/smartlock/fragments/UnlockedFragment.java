@@ -13,13 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.classy.smartlock.R;
-import com.classy.smartlock.activities.MainActivity;
 import com.classy.smartlock.adapters.ApplicationsAdapter;
 import com.classy.smartlock.custom.MySharedPreferences;
 
 public class UnlockedFragment extends Fragment {
-
-    //TODO: adapter and recyclerview stuff
 
     private RecyclerView unlocked_LST_list;
     private ApplicationsAdapter unlocked_adapter;
