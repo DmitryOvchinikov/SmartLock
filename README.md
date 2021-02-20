@@ -1,4 +1,4 @@
-## Usage
+## SmartLock
 An application that allows you to lock other applications with a password while the foreground application service is active, useful to keep children out of certain applications.
 
 <img src="https://github.com/DmitryOvchinikov/SmartLock/blob/master/1.png" width="200" width="120" /> <img src="https://github.com/DmitryOvchinikov/SmartLock/blob/master/2.png" width="200" width="120" /> <img src="https://github.com/DmitryOvchinikov/SmartLock/blob/master/3.png" width="200" width="120" /> <img src="https://github.com/DmitryOvchinikov/SmartLock/blob/master/0.png" width="200" width="120" />
